@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 using System.IO.Ports;
-using System.ComponentModel;
 
-namespace SerialPortListener.Serial
+namespace SerialPortListener
 {
     /// <summary>
     /// Class containing properties related to a serial port 
@@ -13,14 +9,7 @@ namespace SerialPortListener.Serial
     public class SerialSettings : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        string _portName = "";
-        string[] _portNameCollection;
-        int _baudRate = 4800;
-        BindingList<int> _baudRateCollection = new BindingList<int>();
-        Parity _parity = Parity.None;
-        int _dataBits = 8;
-        int[] _dataBitsCollection = new int[] { 5, 6, 7, 8 };
-        StopBits _stopBits = StopBits.One;
+        private string _portName = "";
 
         #region Properties
         /// <summary>
@@ -28,103 +17,49 @@ namespace SerialPortListener.Serial
         /// </summary>
         public string PortName
         {
-            get { return _portName; }
+            get => _portName;
             set
             {
-                if (!_portName.Equals(value))
-                {
-                    _portName = value;
-                    SendPropertyChangedEvent("PortName");
-                }
+                if (_portName.Equals(value)) return;
+                _portName = value;
+                SendPropertyChangedEvent("PortName");
             }
         }
+        
         /// <summary>
         /// The baud rate.
         /// </summary>
-        public int BaudRate
-        {
-            get { return _baudRate; }
-            set 
-            {
-                if (_baudRate != value)
-                {
-                    _baudRate = value;
-                    SendPropertyChangedEvent("BaudRate");
-                }
-            }
-        }
+        public int BaudRate { get; } = 9600;
 
         /// <summary>
         /// One of the Parity values.
         /// </summary>
-        public Parity Parity
-        {
-            get { return _parity; }
-            set 
-            {
-                if (_parity != value)
-                {
-                    _parity = value;
-                    SendPropertyChangedEvent("Parity");
-                }
-            }
-        }
+        public Parity Parity { get; } = Parity.None;
+
         /// <summary>
         /// The data bits value.
         /// </summary>
-        public int DataBits
-        {
-            get { return _dataBits; }
-            set
-            {
-                if (_dataBits != value)
-                {
-                    _dataBits = value;
-                    SendPropertyChangedEvent("DataBits");
-                }
-            }
-        }
+        public int DataBits { get; } = 8;
+
         /// <summary>
         /// One of the StopBits values.
         /// </summary>
-        public StopBits StopBits
-        {
-            get { return _stopBits; }
-            set
-            {
-                if (_stopBits != value)
-                {
-                    _stopBits = value;
-                    SendPropertyChangedEvent("StopBits");
-                }
-            }
-        }
+        public StopBits StopBits { get; } = StopBits.One;
 
         /// <summary>
         /// Available ports on the computer
         /// </summary>
-        public string[] PortNameCollection
-        {
-            get { return _portNameCollection; }
-            set { _portNameCollection = value; }
-        }
+        public string[] PortNameCollection { get; set; }
 
         /// <summary>
         /// Available baud rates for current serial port
         /// </summary>
-        public BindingList<int> BaudRateCollection
-        {
-            get { return _baudRateCollection; }
-        }
+        public BindingList<int> BaudRateCollection { get; } = new BindingList<int>();
 
         /// <summary>
         /// Available databits setting
         /// </summary>
-        public int[] DataBitsCollection
-        {
-            get { return _dataBitsCollection; }
-            set { _dataBitsCollection = value; }
-        }
+        public int[] DataBitsCollection { get; } = { 5, 6, 7, 8 };
 
         #endregion
 
@@ -155,44 +90,44 @@ namespace SerialPortListener.Serial
             const int BAUD_115200 = 0x00020000;
             const int BAUD_128K = 0x00010000;
 
-            _baudRateCollection.Clear();
+            BaudRateCollection.Clear();
 
             if ((possibleBaudRates & BAUD_075) > 0)
-                _baudRateCollection.Add(75);
+                BaudRateCollection.Add(75);
             if ((possibleBaudRates & BAUD_110) > 0)
-                _baudRateCollection.Add(110);
+                BaudRateCollection.Add(110);
             if ((possibleBaudRates & BAUD_150) > 0)
-                _baudRateCollection.Add(150);
+                BaudRateCollection.Add(150);
             if ((possibleBaudRates & BAUD_300) > 0)
-                _baudRateCollection.Add(300);
+                BaudRateCollection.Add(300);
             if ((possibleBaudRates & BAUD_600) > 0)
-                _baudRateCollection.Add(600);
+                BaudRateCollection.Add(600);
             if ((possibleBaudRates & BAUD_1200) > 0)
-                _baudRateCollection.Add(1200);
+                BaudRateCollection.Add(1200);
             if ((possibleBaudRates & BAUD_1800) > 0)
-                _baudRateCollection.Add(1800);
+                BaudRateCollection.Add(1800);
             if ((possibleBaudRates & BAUD_2400) > 0)
-                _baudRateCollection.Add(2400);
+                BaudRateCollection.Add(2400);
             if ((possibleBaudRates & BAUD_4800) > 0)
-                _baudRateCollection.Add(4800);
+                BaudRateCollection.Add(4800);
             if ((possibleBaudRates & BAUD_7200) > 0)
-                _baudRateCollection.Add(7200);
+                BaudRateCollection.Add(7200);
             if ((possibleBaudRates & BAUD_9600) > 0)
-                _baudRateCollection.Add(9600);
+                BaudRateCollection.Add(9600);
             if ((possibleBaudRates & BAUD_14400) > 0)
-                _baudRateCollection.Add(14400);
+                BaudRateCollection.Add(14400);
             if ((possibleBaudRates & BAUD_19200) > 0)
-                _baudRateCollection.Add(19200);
+                BaudRateCollection.Add(19200);
             if ((possibleBaudRates & BAUD_38400) > 0)
-                _baudRateCollection.Add(38400);
+                BaudRateCollection.Add(38400);
             if ((possibleBaudRates & BAUD_56K) > 0)
-                _baudRateCollection.Add(56000);
+                BaudRateCollection.Add(56000);
             if ((possibleBaudRates & BAUD_57600) > 0)
-                _baudRateCollection.Add(57600);
+                BaudRateCollection.Add(57600);
             if ((possibleBaudRates & BAUD_115200) > 0)
-                _baudRateCollection.Add(115200);
+                BaudRateCollection.Add(115200);
             if ((possibleBaudRates & BAUD_128K) > 0)
-                _baudRateCollection.Add(128000);
+                BaudRateCollection.Add(128000);
 
             SendPropertyChangedEvent("BaudRateCollection");
         }
@@ -201,10 +136,9 @@ namespace SerialPortListener.Serial
         /// Send a PropertyChanged event
         /// </summary>
         /// <param name="propertyName">Name of changed property</param>
-        private void SendPropertyChangedEvent(String propertyName)
+        private void SendPropertyChangedEvent(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

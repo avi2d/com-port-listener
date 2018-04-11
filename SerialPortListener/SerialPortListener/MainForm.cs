@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.IO.Ports;
 using System.Windows.Forms;
-using SerialPortListener.Serial;
-using System.IO;
 
 namespace SerialPortListener
 {
     public partial class MainForm : Form
     {
-        SerialPortManager _spManager;
+        private SerialPortManager _spManager;
+
         public MainForm()
         {
             InitializeComponent();
@@ -21,20 +15,19 @@ namespace SerialPortListener
             UserInitialization();
         }
 
-      
         private void UserInitialization()
         {
             _spManager = new SerialPortManager();
-            SerialSettings mySerialSettings = _spManager.CurrentSerialSettings;
+            var mySerialSettings = _spManager.CurrentSerialSettings;
             serialSettingsBindingSource.DataSource = mySerialSettings;
             portNameComboBox.DataSource = mySerialSettings.PortNameCollection;
             baudRateComboBox.DataSource = mySerialSettings.BaudRateCollection;
             dataBitsComboBox.DataSource = mySerialSettings.DataBitsCollection;
-            parityComboBox.DataSource = Enum.GetValues(typeof(System.IO.Ports.Parity));
-            stopBitsComboBox.DataSource = Enum.GetValues(typeof(System.IO.Ports.StopBits));
+            parityComboBox.DataSource = Enum.GetValues(typeof(Parity));
+            stopBitsComboBox.DataSource = Enum.GetValues(typeof(StopBits));
 
-            _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
-            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+            _spManager.NewSerialDataRecieved += _spManager_NewSerialDataRecieved;
+            FormClosing += MainForm_FormClosing;
         }
 
         
@@ -43,23 +36,18 @@ namespace SerialPortListener
             _spManager.Dispose();   
         }
 
-        void _spManager_NewSerialDataRecieved(object sender, SerialDataEventArgs e)
+        private void _spManager_NewSerialDataRecieved(object sender, SerialDataEventArgs e)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
                 // Using this.Invoke causes deadlock when closing serial port, and BeginInvoke is good practice anyway.
-                this.BeginInvoke(new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved), new object[] { sender, e });
+                BeginInvoke(new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved), sender, e);
                 return;
             }
 
-            int maxTextLength = 1000; // maximum text length in text box
-            if (tbData.TextLength > maxTextLength)
-                tbData.Text = tbData.Text.Remove(0, tbData.TextLength - maxTextLength);
-
-            // This application is connected to a GPS sending ASCCI characters, so data is converted to text
-            string str = Encoding.ASCII.GetString(e.Data);
-            tbData.AppendText(str);
-            tbData.ScrollToCaret();
+            var str = BitConverter.ToString(e.Data);
+            tbData.AppendText($"{str}\n\n");
+            SendKeys.SendWait(str);
 
         }
 

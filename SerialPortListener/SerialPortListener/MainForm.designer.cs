@@ -1,11 +1,14 @@
-﻿namespace SerialPortListener
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace SerialPortListener
 {
     partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -186,7 +189,7 @@
             // 
             // serialSettingsBindingSource
             // 
-            this.serialSettingsBindingSource.DataSource = typeof(SerialPortListener.Serial.SerialSettings);
+            this.serialSettingsBindingSource.DataSource = typeof(SerialSettings);
             // 
             // btnStop
             // 
@@ -219,16 +222,16 @@
 
         #endregion
 
-        private System.Windows.Forms.BindingSource serialSettingsBindingSource;
-        private System.Windows.Forms.ComboBox baudRateComboBox;
-        private System.Windows.Forms.ComboBox dataBitsComboBox;
-        private System.Windows.Forms.ComboBox parityComboBox;
-        private System.Windows.Forms.ComboBox portNameComboBox;
-        private System.Windows.Forms.ComboBox stopBitsComboBox;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.TextBox tbData;
-        private System.Windows.Forms.Button btnStop;
+        private BindingSource serialSettingsBindingSource;
+        private ComboBox baudRateComboBox;
+        private ComboBox dataBitsComboBox;
+        private ComboBox parityComboBox;
+        private ComboBox portNameComboBox;
+        private ComboBox stopBitsComboBox;
+        private GroupBox groupBox1;
+        private Button btnStart;
+        private TextBox tbData;
+        private Button btnStop;
     }
 }
 
